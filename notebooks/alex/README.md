@@ -15,6 +15,11 @@ Another big issue was lack of delegation between group members. While I worked a
 
 Regardless, I feel happy with the final state of the design document even though it's likely missing a level of polish for the sheer amount I had to work on it to get it to the final state. In the future, I definitely have to coordinate with my team better to ensure I'm not uselessly working 4+ hours a day when we can be spliting the work.
 
+Adding equations from final draft of design document.
+LEP'd equation: $8h=Leq+10log((T_2-T_1)/T_n)$ dB. From http://www.larsondavis.com/learn/industrial-hygiene/noise-dosimetry-terminology.
+Percent of Daily Dose = D = 100(C1 / T1 + C2 / T2 + Cn / Tn). From https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.95AppA#:~:text=If%20the%20dose%20as%20read,accumulated%20dose%20in%20percent%20exposure.
+T equation: $T = \frac{8}{2^{(L-90)/5}}$. Used to calculate dB error. From same osha source.
+
 All for today.
 
 ## 09/26 Design Document Check

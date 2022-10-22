@@ -4,7 +4,17 @@ import pandas as pd
 import random 
 ##Sample code modified from official PSG website
 spl = 5 #For easy coding, compute this beforehand using pandas and numpy to extract values out of csv and compute using tables and basic arithmetic
-dd = 5
+dd = 0
+test_array=np.array([89, 91])
+#below function returns the daily dose for a given data structure
+def daily_dose(data, time_interval=1): #data is some numpy array that can be taken from a pandasdataframe, time interval is default one second
+    daily = 0
+    for i in range(len(data)): #assume that data is 1-D and only holds decibel values
+        dBdiff = data[i]-90 #baseline is 90
+        daily += time_interval/(8*60*60*(2**(-dBdiff/5))) #modified time interval based on 5 dB tradeoff/exchange rate -- daily gets incremented by time interval of data instance and modified time period 
+    return round(daily*100, 2) #because we want percent, take 2 decimal points : https://stackoverflow.com/questions/20457038/how-to-round-to-2-decimals-with-python
+dd = daily_dose(test_array, 4*60*60)
+
 # Define the window's contents
 layout = [  [sg.Text(f"Average Weighted SPL Value: {spl} dBA")],    
             [sg.Text(f"Sound Exposure Daily Dose: {dd} %")],

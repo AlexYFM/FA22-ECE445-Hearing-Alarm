@@ -1,4 +1,4 @@
-##10/23 Recap of Week 10/17
+## 10/23 Recap of Week 10/17
 Blue Pill dev board referenced: https://www.cytron.io/p-stm32f103c8t6-blue-pill-arduino-compatible-board
 
 Due to this week's lack of a TA meeting this past week, this noteboko entry will cover what would have been discussed, mainly parts, software, and future plans for the project.

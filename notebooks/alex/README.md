@@ -1,4 +1,17 @@
-## 10/16 Recap of Weeks 10/3 and 10/17
+##10/23 Recap of Week 10/17
+Blue Pill dev board referenced: https://www.cytron.io/p-stm32f103c8t6-blue-pill-arduino-compatible-board
+
+Due to this week's lack of a TA meeting this past week, this noteboko entry will cover what would have been discussed, mainly parts, software, and future plans for the project.
+
+As for the parts, the STM32 arrived this past Thursday. Unfortunately, due to the fact that we do not have a functional PCB yet, we cannot test our MCU and digital microphone yet. As such, I made the decision to purchase a development board that uses the exact same MCU as well as a I2S microphone module. The reason behind my purchases is that the dev board and the module can be used on a breadboard. As such, testing should be much easier. I talked about my purchases with our TA, Hojoon, and he said that while we definitely should not plan to use the dev board and breadboard in the final demo as our final project, it's certainly better than nothing. Additionally, it will be helpful in explaining how we developed for testing and generally just help us explain ourselves in the final demo, presentation, and paper. Certainly, there is a drawback in that while developing the dev board and breadboard we won't directly be working on the final project, but I feel like this minor drawback is more than made up for due to the experience we will gain from developing and testing the development breadboard. I have received the dev board on 10/22 and should receive the mic module on 10/24.
+
+Also this week, I was able to implement the basic daily dose function in the python code. Thus, at the very least, if the software is given a numpy array or a csv file to create an array from, it can successfully communicate the daily dose value as given by the OSHA equation. The GUI, however, is still pretty basic and no consideration is given to frequency yet. 
+
+Last, I will talk about my plans going forward. While I was not able to solder the dev board together yet, in the following week, I plan to solder both the board and the mic module. Additionally, my team should begin basic testing of the dev board and possibly mic module. I hope to be able to get an idea of the pins used for a new PCB design as well as a basic idea of how to program the STM32. Last, I plan to complete my individual report by the end of this weekend, and if I have time, further develop the software.
+
+All for now.
+
+## 10/16 Recap of Weeks 10/3 and 10/10
 This entry will cover what I did over the period after the design review in lieu of the two TA meetings that were supposed to happen that unfortunately, did not happen due to our TA, Hojoon being busy due to his degree defense. 
 
 The design review went fairly well, as they seemed to be on board with the project. We managed to make our circuit schematic and PCB design before the review, so it was nice to be able to bring it up despite the fact we didn't have it ready for the PACE document upload. Also, I was very impressed by my teammates, as it felt like Jake knew exactly how the project should be pitched and Jinzhi was also able to give good input on certain questions. I took the following main points away from the review: we should keep up our focus on accessability, we should try to contact some professors like Andrew Singer, and we should try to make the software recommend certain types of ear protection if possible and give an estimate of how much damage was protected if we have time. Unfortunately, we have not to my knowledge contacted any professors yet, but I'm sure that we will in the coming weeks once our microprocessor arrives. 

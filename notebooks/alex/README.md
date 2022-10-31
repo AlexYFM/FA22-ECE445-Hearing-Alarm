@@ -1,3 +1,14 @@
+## 10/30 Recap of Week 10/23
+A lot of development happened this week, so I'll be covering events from meetings with Hojoon to soldering and testing the development board.
+
+First, I met with Hojoon on Monday to confirm some information. Honestly, a lot of the time was spent covering my concerns about the class, ranging from the soldering and first teamwork assignment to general fears about how the project was going. He assuaged my fears and scheduled a meeting on Wednesday, later delayed to Thursday, to begin soldering parts. 
+
+Having received the development board that night, I met with Hojoon and the rest of my team on Thursday to start soldering. Soldering was initially pretty rough as the station we were at had a relatively inefficient soldering iron and I did not have much experience, but due to the switch to a better station and learning the ropes, I was able to, with the help of my team, solder the board together. I also was able to solder the digital microphone together, but I have not tested it yet.
+
+As a sidenote I completed the individual progress report on Friday. Now, today, I was able to test the development board. I used a couple videos/website as a reference: https://www.youtube.com/watch?v=VlCYI2U-qyM to help with programming the MCU using USB DFU, this video https://www.youtube.com/watch?v=92A98iEFmaA&t=367s to help me with USB communication, and this website to help with actually seeing what the MCU sent back through USB COM http://www.hydro-temp.com/support/assets/blue-board-with-usb.pdf. All in all, I was able to test the development board by creating and programming a working blinker code (https://wiki.st.com/stm32mcu/wiki/STM32StepByStep:Step2_Blink_LED) and by making sure I could actually communicate via USB.
+
+The next step will be to test the digital microphone and make sure I am able to successful read some kind of output. Once we get that working, we will genuinely have a great chance of fully realizing this project as the rest is simply programming, soldering the PCB, and retesting. 
+
 ## 10/23 Recap of Week 10/17
 Blue Pill dev board referenced: https://www.cytron.io/p-stm32f103c8t6-blue-pill-arduino-compatible-board
 

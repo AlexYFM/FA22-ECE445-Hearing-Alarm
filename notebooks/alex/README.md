@@ -1,4 +1,4 @@
-## 10/30 Recap of Week 10/23
+## 10/30 Recap of Week 10/24
 A lot of development happened this week, so I'll be covering events from meetings with Hojoon to soldering and testing the development board.
 
 First, I met with Hojoon on Monday to confirm some information. Honestly, a lot of the time was spent covering my concerns about the class, ranging from the soldering and first teamwork assignment to general fears about how the project was going. He assuaged my fears and scheduled a meeting on Wednesday, later delayed to Thursday, to begin soldering parts. 

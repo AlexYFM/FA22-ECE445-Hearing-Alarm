@@ -1,3 +1,16 @@
+## 11/7 Recap of Week 10/31
+As with last week, a good amount of development occured, and I will likely have to add onto this week's notebook entry through code, images, etc. Regardless, it will cover the work I did on the development board, specifically with programming the STM32, as well as the updated schematic and PCB, the latter of which I ordered from PCBway.
+
+First during Monday-Tuesday, I configured the STM32CubeIDE software to send I2S signals to the STM32. Using a logic analyzer, I confirmed that the microphone was behaving as usual (IMAGE TO BE ATTACHED TO NOTEBOOK). The main thing was confirming that the microphone only sent signals during one out of every two word cycles, since the microphone should only send during one out of every two cycles depending on the L/R pin. 
+
+Next, on Wednesday, I spent some time fixing up the schematic and PCB. I do not have to do too much aside from switching out the old MCU for the STM32F401, fixing the input pins so that all of the voltage pins were covered and the data pins went to the right places, and adding in a DIP switch to control the BOOT0 pin. The last one is important because without it, we would have no way to program the MCU. After that, I generated the gerber and drill files, sent them to PCBway, got the PCB approved, then sent the files to Hojoon and ordered a copy of the PCB myself. I ordered it by myself in addition to sending it to Hojoon as last time, our group never received our PCB. I should be receiving my copy of the PCB sometime this week.
+
+Finally, this weekend, I tried my best to develop software that would allow us to correctly read off the I2S readings. After a couple hours of development, I managed to get semi-working code (NOT THE CURRENT main.c) after trial and error in addition to using these website as a source: https://medium.com/@davidramsay/how-to-get-i2s-working-on-an-stm32-mcu-33de0e9c9ff8, https://learn.adafruit.com/adafruit-i2s-mems-microphone-breakout/arduino-wiring-and-test. I will go into more detail as I develop the code further, but essentially, right now, the code takes around 1000 non-zero samples with a valid (non-zero reading) from the I2S microphone, corrects the data by subtracting the average from every sample, then sends out via USB the peak (max - min) reading. It works decently well, but its scale is still incorrect, but we can account for that later when doing the instantaneous and integrated SPL checks by modifying the values that we check for them. 
+
+While I skipped over a lot of development, if need be I will add it later. Regardless, however, I feel like the group and I made a lot of progress this week. 
+
+All for now. 
+
 ## 10/30 Recap of Week 10/24
 A lot of development happened this week, so I'll be covering events from meetings with Hojoon to soldering and testing the development board.
 

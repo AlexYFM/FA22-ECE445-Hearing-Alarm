@@ -11,6 +11,8 @@ While I skipped over a lot of development, if need be I will add it later. Regar
 
 All for now. 
 
+Edit: I added a media directory that visually illustrates some of the development I went through. 
+
 ## 10/30 Recap of Week 10/24
 A lot of development happened this week, so I'll be covering events from meetings with Hojoon to soldering and testing the development board.
 

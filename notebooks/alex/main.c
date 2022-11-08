@@ -61,41 +61,34 @@ void getStr(int32_t d, char* str);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 uint8_t buffer[64];
-uint8_t *data = "Hello World from USB CDC\n";
-uint8_t *copy = "Hello World from USB CDC\n";
-char *done = ",average computed\n";
+uint8_t *data;
 /*
-      CDC_Transmit_FS(data, strlen(data));
 	  HAL_GPIO_TogglePin (GPIOA, LED_Pin);
-
-	  //Below code from https://medium.com/@davidramsay/how-to-get-i2s-working-on-an-stm32-mcu-33de0e9c9ff8
-	  volatile HAL_StatusTypeDef result = HAL_I2S_Receive(&hi2s2, data_in, 2, 100);
-	  if (result == HAL_OK) {
-	  volatile int32_t data_full = (int32_t) data_in[0] << 16 | data_in[1];
-	  volatile int16_t data_short = (int16_t) data_in[0];
-	  data = &data_full;
-	  CDC_Transmit_FS(data, strlen(data));
-	  data = &data_short;
-	  CDC_Transmit_FS(data, strlen(data));
-	  volatile uint32_t counter = 10;
-	  while(counter--);
+	  while(count){
+		  volatile HAL_StatusTypeDef result = HAL_I2S_Receive(&hi2s2, data_in, 2, 100);
+		  if (result == HAL_OK) {
+//			  current = (int32_t) (data_in[0] << 16) | data_in[1]; //something must be going wrong here
+//			  current = data_in[0]; //I think negative values are getting handled incorrectly
+			  if((data_in[1]==0&&data_in[1]==0)||data_in[0]>=128) continue; //if we have an invalid value for data_in, get another reading
+			  //32768=128*2<<8 since max positive value is 2^15-1, 2^15=32768
+			  current = (data_in[0]<<16)+data_in[1]; //else we have a valid reading
+			  avg += current/n;
+			  count--;
+		  }
 	  }
-	  HAL_Delay (1000);
-
-	  char s[6];
-	  s[5] = ',';
-	  toStr(data_in[0], s);
+	  count = n;
+	  if(min_avg==-1||min_avg>avg) min_avg = avg; //this and the next line breaks the loop for some reason
+	  avg -= min_avg;
+	  // still much higher than it should
+	  // regardless, behavior should be that if this average value is greater than (2^23-1)*10^-(30/20)= around 265k
+//	  avg = avg>>8; //probably not exact, but this gets closer to expected range
+	  getStr(avg, s);
+	  avg = 0;
 	  data = s;
-	  CDC_Transmit_FS(data, strlen(data)); //send first 8 bits of I2S SD
-	  toStr(data_in[1], s);
-	  data = s;
-	  HAL_Delay (10); //delay to give some time for USB to transmit
-	  CDC_Transmit_FS(data, strlen(data)); //send last 16 bits of I2S SD
-	  data = done;
+	  CDC_Transmit_FS(data, strlen(data)); //send string output data
 	  HAL_Delay (10);
-	  CDC_Transmit_FS(data, strlen(data));
-//	  toStr((int16_t) 16, s);
-//	  CDC_Transmit_FS(data, strlen(data)); //test value of 16
+//	  data = done;
+//	  CDC_Transmit_FS(data, strlen(data)); //send confirmation
 */
 /* USER CODE END 0 */
 
@@ -130,12 +123,17 @@ int main(void)
   MX_USB_DEVICE_Init();
   /* USER CODE BEGIN 2 */
   uint16_t data_in[2];
-  uint16_t n = 10000;
+  uint16_t n = 1024;
   int32_t current;
   uint16_t count = n; //number of samples
   int32_t avg = 0; //running average of the sampled data
-  int32_t min_avg = -1; //keeps track of the lowest average so far -- DC offset
-  char s[10]; //store string output
+//  int32_t min_avg = -1; //keeps track of the lowest average so far -- DC offset
+  char s[13]; //store string output
+  float davg=0;
+  int32_t max = 0;
+  int32_t min = 100000;
+  int32_t peak;
+  int32_t samples[1024];
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -146,27 +144,29 @@ int main(void)
 	  while(count){
 		  volatile HAL_StatusTypeDef result = HAL_I2S_Receive(&hi2s2, data_in, 2, 100);
 		  if (result == HAL_OK) {
-//			  current = (int32_t) (data_in[0] << 16) | data_in[1]; //something must be going wrong here
-//			  current = data_in[0]; //I think negative values are getting handled incorrectly
-			  if(data_in[0]>=128) continue; //if we have an invalid value for data_in, get another reading
-			  //128 since max value is 2^16*2^7-1, 2^7=128
-			  if(data_in[0]<128) current = (data_in[0]<<16)+data_in[1]; //else we have a valid reading
-			  avg += current/n;
-			  count--;
+			  if(data_in[1]==0||data_in[0]>=16384) continue;
+			  current = data_in[0]+(data_in[1]>>7);
+			  samples[--count] = current;
 		  }
 	  }
+	  for (int i=0; i<n; i++){
+		  davg += samples[i]/n; //average
+	  }
+	  avg = (int32_t) davg;
+	  for (int i=0; i<n; i++){
+		  samples[i] -= avg;
+		  if(min>samples[i]) min = samples[i];
+		  if(max<samples[i]) max = samples[i];
+	  }
 	  count = n;
-//	  if(min_avg==-1||min_avg>avg) min_avg = avg; //this and the next line breaks the loop for some reason
-//	  avg -= min_avg;
-	  // still much higher than it should
-	  // regardless, behavior should be that if this average value is greater than (2^23-1)*10^-(30/20)= around 265k
-	  getStr(avg, s);
-	  avg = 0;
+	  peak = max-min;
+	  max = 0;
+	  min = 100000;
+	  getStr(peak, s); //2072.43028737 -- 90 dB right shifted by 7
+	  davg = 0;
 	  data = s;
-	  CDC_Transmit_FS(data, strlen(data)); //send string output data
-	  HAL_Delay (100);
-	  data = (uint8_t*)done;
-	  CDC_Transmit_FS(data, strlen((char*)data)); //send confirmation
+	  CDC_Transmit_FS(data, strlen(data));
+	  HAL_Delay(500);
   }
   /* USER CODE END WHILE */
   /* USER CODE BEGIN 3 */
@@ -294,13 +294,12 @@ void toStr(uint16_t d, char* str){ //converting int16_t to decimal -- assuming p
 }
 
 void getStr(int32_t d, char* str){ //assume str's length is at least 10
-	uint8_t count = 10;
-	d = (int32_t) abs(d);
+	uint8_t count = 13;
 	while(count){
-		str[count-1] = d%10+'0'; //there's an easier way to do this, but don't want to waste memory
+		str[--count] = d%10+'0'; //there's an easier way to do this, but don't want to waste memory
 		d/=10;
-		count--;
 	}
+	str[0] = ',';
 }
 /* USER CODE END 4 */
 

@@ -4,7 +4,7 @@ Added 11/08/2022
 
 VID_20221030_153623.mp4 -- Verifying that basic programming worked. Basic blinker code. 
 
-VID_20221030_212021.mp4 -- Getting USB communication from the chip to my laptop working.
+VID_20221030_212021.mp4 -- Getting USB communication from the chip to my laptop working. Warning: video has sound coming from music I was listening to. 
 
 IMG_20221106_111339.jpg -- View of the development board with LED on. 
 

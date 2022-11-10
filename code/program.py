@@ -2,6 +2,8 @@ import PySimpleGUI as sg
 import numpy as np 
 import pandas as pd
 import random 
+#Alex Yuan Fall 2022 Senior Design Project
+
 ##Sample code modified from official PSG website
 spl = 5 #For easy coding, compute this beforehand using pandas and numpy to extract values out of csv and compute using tables and basic arithmetic
 dd = 0

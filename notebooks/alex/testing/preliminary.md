@@ -1,4 +1,5 @@
-# Basic SPL Testing/Calibration 11/12/22 ayuan20 Alex Yuan 
+*ayuan20 Alex Yuan*
+# Basic SPL Testing/Calibration 11/12/22 
 
 Using the phone app  I inferred that the snaps that were able 
 to cause the LED to light up, i.e., a greater raw value than 2072, only peaked around 85 dB. Using another app that appears to be more reputable (it is able to be calibrated with 

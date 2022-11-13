@@ -1,6 +1,5 @@
-# 11/12/22
+# Basic SPL Testing/Calibration 11/12/22 ayuan20 Alex Yuan 
 
-# Basic SPL Testing/Calibration
 Using the phone app  I inferred that the snaps that were able 
 to cause the LED to light up, i.e., a greater raw value than 2072, only peaked around 85 dB. Using another app that appears to be more reputable (it is able to be calibrated with 
 a real SPL meter), I found that snaps peaked at around 80 dB (corresponding to traffic, a loud alarm clock among other things according to https://decibelpro.app/blog/how-loud-is-80-decibels/). What these app show is that our LED does not actually indicate dangerous sound levels, but rather "loud" or potentially dangerous sound levels.

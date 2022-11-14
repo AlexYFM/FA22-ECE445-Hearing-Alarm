@@ -100,6 +100,8 @@ Aside from the changes with the document itself, they mentioned that I should re
 
 All for today.
 
+## 
+
 *Alex Yuan Fall 2022 Semester*
 
 *TA: Hojoon Ryu*

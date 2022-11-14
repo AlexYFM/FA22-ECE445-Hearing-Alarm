@@ -6,7 +6,7 @@ In the future, I believe that it would be better to first use a smaller USB port
 
 # Basic SPL Testing/Calibration 11/12/22 
 
-Using the phone app  I inferred that the snaps that were able 
+Using the phone app "Sound Meter" (https://play.google.com/store/apps/details?id=com.splendapps.decibel&hl=en_US&gl=US) I inferred that the snaps that were able 
 to cause the LED to light up, i.e., a greater raw value than 2072, only peaked around 85 dB. Using another app that appears to be more reputable (it is able to be calibrated with 
 a real SPL meter), I found that snaps peaked at around 80 dB (corresponding to traffic, a loud alarm clock among other things according to https://decibelpro.app/blog/how-loud-is-80-decibels/). What these app show is that our LED does not actually indicate dangerous sound levels, but rather "loud" or potentially dangerous sound levels.
  I believe that this is not a bad thing, but we will have to keep in mind while presenting or calibrating our software, as a reading of 2072 definitely does not correspond to 90 dB.

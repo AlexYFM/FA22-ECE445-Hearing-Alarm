@@ -99,3 +99,6 @@ One last thing that they pointed out is that for our R/V tables, we want to make
 Aside from the changes with the document itself, they mentioned that I should reach out to Andrew Singer for help among others. Him specifically because he has personally dealt with audio projects before. He would probably be a good reference for R/V testing, design elements, etc.
 
 All for today.
+
+*Alex Yuan Fall 2022 Semester*
+*TA: Hojoon Ryu*

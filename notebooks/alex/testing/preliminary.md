@@ -1,3 +1,7 @@
+# Attempted USB Testing on PCB 11/13/22
+
+Today, I tried to connect the PCB to my laptop using the USB port to do some basic voltage testing, but as soon as I connected the port with my USB hub, my monitor immediately shut down. After some time trying to get the USB hub to work with the monitor again after taking out the USB connection to the PCB, I found that the HDMI connection stopped working altogether. Given that this malfunctioning has occured with none of the other USB devices I've plugged into the hub, I have a suspicion that one or more of the connections on the PCB does not work, including possibly the USB connection itself. One thing I noticed that I definitely should have acted on earlier has the fact that the two pins on the side of the USB were not yet soldered, which may be one reason for the malfunctioning. In order to test this, what we can do is   
+
 # Basic SPL Testing/Calibration 11/12/22 
 
 Using the phone app  I inferred that the snaps that were able 

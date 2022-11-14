@@ -1,4 +1,3 @@
-*Alex Yuan*
 # Basic SPL Testing/Calibration 11/12/22 
 
 Using the phone app  I inferred that the snaps that were able 
@@ -12,3 +11,5 @@ is that noise will mean decibel values may be inaccurate.
                                                              
 Ultimately, while the current bound of 2072 is okay (snapping near someone's ear is fairly loud by colloquial standards), that does mean that for the integrated SPL
 and for accurate dB readings, we must realize that a reading of 2072 is not especially close to 90 dB. 
+
+*Alex Yuan*

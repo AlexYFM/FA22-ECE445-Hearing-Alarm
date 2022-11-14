@@ -1,4 +1,4 @@
-*Alex Yuan ayuan20*
+*Alex Yuan*
 # Basic SPL Testing/Calibration 11/12/22 
 
 Using the phone app  I inferred that the snaps that were able 

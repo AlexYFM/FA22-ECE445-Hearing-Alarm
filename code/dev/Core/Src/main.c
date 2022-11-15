@@ -140,6 +140,7 @@ int main(void)
   double dd = 0; //keep track of daily dose
   int reached = 16; //simple counter
   int dd_reached = 0; //keep track of if we've reached dd threshold
+  int duration = 0;
   int32_t max_peak;
   int32_t decibel;
   int32_t max = 0;
@@ -175,7 +176,13 @@ int main(void)
 	  min = 100000;	  davg = 0;
 	  data = s;
 	  dd += dailyDose(peak);
-	  if(peak>2072) HAL_GPIO_WritePin(GPIOA, LEDINST_Pin, GPIO_PIN_SET); //If over given value, means >90 dB, set warning
+	  if(peak>2072){
+		  HAL_GPIO_WritePin(GPIOA, LEDINST_Pin, GPIO_PIN_SET); //If over given value, means >90 dB, set warning
+		  duration = 8;
+	  }
+	  else if(duration<=0) HAL_GPIO_WritePin(GPIOA, LEDINST_Pin, GPIO_PIN_RESET);
+	  else duration--;
+
 	  if(dd>=1&&dd_reached==0){
 		  HAL_GPIO_TogglePin(GPIOA, LEDINT_Pin); //If we've reached daily dose
 		  dd_reached = 1; //Making sure we don't keep toggling pin
@@ -183,7 +190,6 @@ int main(void)
 	  if(peak>max_peak) max_peak = peak;
 	  reached--;
 	  if(!reached){
-		  if(peak<2072) HAL_GPIO_WritePin(GPIOA, LEDINST_Pin, GPIO_PIN_RESET);
 		  HAL_GPIO_TogglePin(GPIOA, LED_Pin);
 		  reached = 16;
 		  getStr(max_peak, s); //2072.43028737 -- around 70-80 dB right shifted by 7

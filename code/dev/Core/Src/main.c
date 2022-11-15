@@ -138,13 +138,14 @@ int main(void)
   uint8_t s[10]; //store string output
   float davg=0;
   double dd = 0; //keep track of daily dose
-  int reached = 20; //simple counter
+  int reached = 16; //simple counter
+  int dd_reached = 0; //keep track of if we've reached dd threshold
   int32_t max_peak;
   int32_t decibel;
   int32_t max = 0;
   int32_t min = 100000;
   int32_t peak = 0;
-  int32_t samples[1024];
+  int32_t samples[n];
   /* USER CODE END 2 */
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
@@ -153,9 +154,9 @@ int main(void)
 	  while(count){
 		  volatile HAL_StatusTypeDef result = HAL_I2S_Receive(&hi2s2, data_in, 2, 100);
 		  if (result == HAL_OK) {
-			  if(data_in[1]==0||data_in[0]>=16384) continue; //need this otherwise data is way too noisy
+			  if(data_in[1]==0||data_in[0]>=32768) continue; //need this otherwise data is way too noisy
 			  //trying without any checks for zeros or potential negatives
-			  current = data_in[0]+(data_in[1]>>7);
+			  current = data_in[0];
 			  samples[--count] = current;
 		  }
 	  }
@@ -175,9 +176,9 @@ int main(void)
 	  data = s;
 	  dd += dailyDose(peak);
 	  if(peak>2072) HAL_GPIO_WritePin(GPIOA, LEDINST_Pin, GPIO_PIN_SET); //If over given value, means >90 dB, set warning
-	  if(dd>=1&&reached==0){
+	  if(dd>=1&&dd_reached==0){
 		  HAL_GPIO_TogglePin(GPIOA, LEDINT_Pin); //If we've reached daily dose
-		  reached = 1; //Making sure we don't keep toggling pin
+		  dd_reached = 1; //Making sure we don't keep toggling pin
 	  }
 	  if(peak>max_peak) max_peak = peak;
 	  reached--;

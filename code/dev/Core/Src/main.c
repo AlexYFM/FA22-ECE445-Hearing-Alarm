@@ -17,6 +17,9 @@
   */
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
+#define __FPU_PRESENT             1U
+#define ARM_MATH_CM4
+#include "arm_math.h"
 #include "main.h"
 #include "usb_device.h"
 
@@ -127,29 +130,31 @@ int main(void)
   MX_USB_DEVICE_Init();
   /* USER CODE BEGIN 2 */
   uint16_t data_in[2];
-  uint16_t n = 1024; //number of samples, keep at power of 2 for FFT
+  uint16_t n = 256; //number of samples, keep at power of 2 for FFT
   int32_t current;
   uint16_t count = n;
   int32_t avg = 0; //running average of the sampled data
 //  int32_t min_avg = -1; //keeps track of the lowest average so far -- DC offset
-  char s[13]; //store string output
+  uint8_t s[10]; //store string output
   float davg=0;
   double dd = 0; //keep track of daily dose
-  int reached = 0;
+  int reached = 20; //simple counter
+  int32_t max_peak;
+  int32_t decibel;
   int32_t max = 0;
   int32_t min = 100000;
-  int32_t peak;
+  int32_t peak = 0;
   int32_t samples[1024];
   /* USER CODE END 2 */
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  HAL_GPIO_TogglePin (GPIOA, LED_Pin);
 	  while(count){
 		  volatile HAL_StatusTypeDef result = HAL_I2S_Receive(&hi2s2, data_in, 2, 100);
 		  if (result == HAL_OK) {
-			  if(data_in[1]==0||data_in[0]>=16384) continue;
+			  if(data_in[1]==0||data_in[0]>=16384) continue; //need this otherwise data is way too noisy
+			  //trying without any checks for zeros or potential negatives
 			  current = data_in[0]+(data_in[1]>>7);
 			  samples[--count] = current;
 		  }
@@ -166,19 +171,29 @@ int main(void)
 	  count = n;
 	  peak = max-min;
 	  max = 0;
-	  min = 100000;
-	  getStr(peak, s); //2072.43028737 -- 90 dB right shifted by 7
-	  davg = 0;
+	  min = 100000;	  davg = 0;
 	  data = s;
-	  if(peak>2072) HAL_GPIO_WritePin(GPIOA, LEDINST_Pin, GPIO_PIN_SET); //If over given value, means >90 dB, set warning
-	  else HAL_GPIO_WritePin(GPIOA, LEDINST_Pin, GPIO_PIN_RESET);
 	  dd += dailyDose(peak);
+	  if(peak>2072) HAL_GPIO_WritePin(GPIOA, LEDINST_Pin, GPIO_PIN_SET); //If over given value, means >90 dB, set warning
 	  if(dd>=1&&reached==0){
 		  HAL_GPIO_TogglePin(GPIOA, LEDINT_Pin); //If we've reached daily dose
 		  reached = 1; //Making sure we don't keep toggling pin
 	  }
-	  CDC_Transmit_FS(data, strlen(data));
-	  HAL_Delay(500);
+	  if(peak>max_peak) max_peak = peak;
+	  reached--;
+	  if(!reached){
+		  if(peak<2072) HAL_GPIO_WritePin(GPIOA, LEDINST_Pin, GPIO_PIN_RESET);
+		  HAL_GPIO_TogglePin(GPIOA, LED_Pin);
+		  reached = 16;
+		  getStr(max_peak, s); //2072.43028737 -- around 70-80 dB right shifted by 7
+		  CDC_Transmit_FS(data, strlen(data));
+		  decibel = (int)(10.0*(log(max_peak/2072.0)/log(2.0)))+70; //if peak is too low, maybe modify it by downshifting more/applying a function to account for noise
+		  getStr(decibel, s);
+		  max_peak = 0; //reset max peak
+		  data = s;
+		  HAL_Delay(100); //allow the USB transfer to reset, code similar to this did weird stuff withoutit
+		  CDC_Transmit_FS(data, strlen(data));
+	  }
   }
     /* USER CODE END WHILE */
 
@@ -307,7 +322,7 @@ void toStr(uint16_t d, char* str){ //converting int16_t to decimal -- assuming p
 }
 
 void getStr(int32_t d, char* str){ //assume str's length is at least 10
-	uint8_t count = 13;
+	uint8_t count = 10;
 	while(count){
 		str[--count] = d%10+'0'; //there's an easier way to do this, but don't want to waste memory
 		d/=10;

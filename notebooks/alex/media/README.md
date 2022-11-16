@@ -1,6 +1,10 @@
 ## Here is a description of all the photos and videos in this directory.
 
-Added 11/08/2022
+### Added 11/15/2022
+
+VID_20221115_204014.mp4 -- Verifying that dev board lights up USB when "loud" and software is able to process sound and convey instataneous SPL in both absolute and decibel values. 
+
+### Added 11/08/2022
 
 VID_20221030_153623.mp4 -- Verifying that basic programming worked. Basic blinker code. 
 

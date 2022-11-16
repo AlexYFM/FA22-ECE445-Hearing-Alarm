@@ -2,7 +2,9 @@
 
 ### Added 11/15/2022
 
-VID_20221115_204014.mp4 -- Verifying that dev board lights up USB when "loud" and software is able to process sound and convey instataneous SPL in both absolute and decibel values. 
+VID_20221115_204014.mp4 -- Verifying that dev board lights up USB when "loud" and software is able to process sound and convey instataneous SPL in both "absolute" and decibel values. 
+
+VID_20221115_204516.mp4 -- Same as above except only decibel and board, no "absolute" SPL values.
 
 ### Added 11/08/2022
 

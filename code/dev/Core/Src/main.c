@@ -135,7 +135,8 @@ int main(void)
   uint16_t count = n;
   int32_t avg = 0; //running average of the sampled data
 //  int32_t min_avg = -1; //keeps track of the lowest average so far -- DC offset
-  uint8_t s[10]; //store string output
+  uint8_t s[7]; //store string output
+  s[6] = '\0'; //null character to terminate the string -- this should remove any weird artifacts
   float davg=0;
   double dd = 0; //keep track of daily dose
   int reached = 16; //simple counter
@@ -147,6 +148,13 @@ int main(void)
   int32_t min = 100000;
   int32_t peak = 0;
   int32_t samples[n];
+
+  //arm code below from https://stm32f4-discovery.net/2014/10/stm32f4-fft-example/
+//  arm_cfft_radix4_instance_f32 S;	/* ARM CFFT module */
+//  float32_t maxValue;				/* Max FFT value is stored here */
+//  uint32_t maxIndex;				/* Index in Output array where max value is */
+//  float32_t fft_output[n];
+//  float32_t fft_input[2*n];
   /* USER CODE END 2 */
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
@@ -173,15 +181,16 @@ int main(void)
 	  count = n;
 	  peak = max-min;
 	  max = 0;
-	  min = 100000;	  davg = 0;
+	  min = 100000;
+	  davg = 0;
 	  data = s;
 	  dd += dailyDose(peak);
 	  if(peak>2072){
 		  HAL_GPIO_WritePin(GPIOA, LEDINST_Pin, GPIO_PIN_SET); //If over given value, means >90 dB, set warning
-		  duration = 8;
+		  duration = 8; //adding minimum duration of 8 cycles
 	  }
-	  else if(duration<=0) HAL_GPIO_WritePin(GPIOA, LEDINST_Pin, GPIO_PIN_RESET);
-	  else duration--;
+	  else if(duration<=0) HAL_GPIO_WritePin(GPIOA, LEDINST_Pin, GPIO_PIN_RESET); //duration over -- "loud" noise not detected any longer
+	  else duration--; //duration not over but not updated -- decrease duration
 
 	  if(dd>=1&&dd_reached==0){
 		  HAL_GPIO_TogglePin(GPIOA, LEDINT_Pin); //If we've reached daily dose
@@ -190,16 +199,31 @@ int main(void)
 	  if(peak>max_peak) max_peak = peak;
 	  reached--;
 	  if(!reached){
+//		  for(int i=0; i<2*n; i+=2){ //this code from same arm source as above
+//			  fft_input[i] = samples[i]; //real
+//			  fft_input[i+1] = 0; //imaginary
+//		  }
+//		  arm_cfft_radix4_init_f32(&S, n, 0, 1);
+//	      arm_cfft_radix4_f32(&S, fft_input);
+//	      arm_cmplx_mag_f32(fft_input, fft_output, n);
+//	      arm_max_f32(fft_output, n, &maxValue, &maxIndex); //this code computes fft and computes the maximum index and maximum value
+
 		  HAL_GPIO_TogglePin(GPIOA, LED_Pin);
 		  reached = 16;
 		  getStr(max_peak, s); //2072.43028737 -- around 70-80 dB right shifted by 7
 		  CDC_Transmit_FS(data, strlen(data));
 		  decibel = (int)(10.0*(log(max_peak/2072.0)/log(2.0)))+70; //if peak is too low, maybe modify it by downshifting more/applying a function to account for noise
+		  if(decibel<0) decibel = 0; //negative decibel values both don't make sense and make weird USB outputs
 		  getStr(decibel, s);
 		  max_peak = 0; //reset max peak
 		  data = s;
-		  HAL_Delay(100); //allow the USB transfer to reset, code similar to this did weird stuff withoutit
+		  HAL_Delay(50); //allow the USB transfer to reset, code similar to this did weird stuff without it
 		  CDC_Transmit_FS(data, strlen(data));
+//		  int32_t max_freq = maxIndex; // max frequency is index times resolution, which is f_s/n -- f_s for us is 48kHz
+//		  getStr(max_freq, s);
+//		  data = s;
+//		  HAL_Delay(50); //allow the USB transfer to reset, code similar to this did weird stuff without it
+//		  CDC_Transmit_FS(data, strlen(data));
 	  }
   }
     /* USER CODE END WHILE */
@@ -329,12 +353,12 @@ void toStr(uint16_t d, char* str){ //converting int16_t to decimal -- assuming p
 }
 
 void getStr(int32_t d, char* str){ //assume str's length is at least 10
-	uint8_t count = 10;
+	uint8_t count = 5;
 	while(count){
 		str[--count] = d%10+'0'; //there's an easier way to do this, but don't want to waste memory
 		d/=10;
 	}
-	str[0] = ',';
+	str[5] = ',';
 }
 
 double dailyDose(int32_t p){ //adapted from my python code

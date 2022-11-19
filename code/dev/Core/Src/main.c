@@ -210,8 +210,8 @@ int main(void)
 
 		  HAL_GPIO_TogglePin(GPIOA, LED_Pin);
 		  reached = 16;
-		  getStr(max_peak, s); //2072.43028737 -- around 70-80 dB right shifted by 7
-		  CDC_Transmit_FS(data, strlen(data));
+//		  getStr(max_peak, s); //2072.43028737 -- around 70-80 dB right shifted by 7
+//		  CDC_Transmit_FS(data, strlen(data));
 		  decibel = (int)(10.0*(log(max_peak/2072.0)/log(2.0)))+70; //if peak is too low, maybe modify it by downshifting more/applying a function to account for noise
 		  if(decibel<0) decibel = 0; //negative decibel values both don't make sense and make weird USB outputs
 		  getStr(decibel, s);

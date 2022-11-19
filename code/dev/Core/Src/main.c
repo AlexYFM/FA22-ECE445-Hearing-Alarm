@@ -206,7 +206,15 @@ int main(void)
 //		  arm_cfft_radix4_init_f32(&S, n, 0, 1);
 //	      arm_cfft_radix4_f32(&S, fft_input);
 //	      arm_cmplx_mag_f32(fft_input, fft_output, n);
-//	      arm_max_f32(fft_output, n, &maxValue, &maxIndex); //this code computes fft and computes the maximum index and maximum value
+////	      arm_max_f32(fft_output, n, &maxValue, &maxIndex); //this code computes fft and computes the maximum index and maximum value
+//	      maxIndex = 0;
+//	      maxValue = fft_output[0];
+//	      for(int i=1; i<n; i++){
+//	    	  if(fft_output[i]>maxValue){
+//	    		  maxValue = fft_output[i];
+//	    		  maxIndex = i;
+//	    	  }
+//	      }
 
 		  HAL_GPIO_TogglePin(GPIOA, LED_Pin);
 		  reached = 16;
@@ -219,8 +227,7 @@ int main(void)
 		  data = s;
 		  HAL_Delay(50); //allow the USB transfer to reset, code similar to this did weird stuff without it
 		  CDC_Transmit_FS(data, strlen(data));
-//		  int32_t max_freq = maxIndex; // max frequency is index times resolution, which is f_s/n -- f_s for us is 48kHz
-//		  getStr(max_freq, s);
+//		  getStr((int32_t) maxIndex, s);
 //		  data = s;
 //		  HAL_Delay(50); //allow the USB transfer to reset, code similar to this did weird stuff without it
 //		  CDC_Transmit_FS(data, strlen(data));
